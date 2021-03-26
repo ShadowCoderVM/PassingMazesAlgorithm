@@ -7,12 +7,10 @@ namespace solution
 {
     class DataCommandFormater : CommandFormater<DataEdge>
     {
-        public DataCommandFormater() : base(
-            (sb, edge) =>
-            {
-                sb.Append($"{pairs[edge.NeighborSide]}");
-            })
-        { }
+        public override void Format(StringBuilder sb, DataEdge edge)
+        {
+            sb.Append(pairs[edge.NeighborSide]);
+        }
     }
 }
 

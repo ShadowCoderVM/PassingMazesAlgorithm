@@ -1,6 +1,7 @@
 ﻿using QuickGraph;
 using QuickGraph.Algorithms;
 using solution.Graph.Model;
+using solution.Map.Model.MapObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,6 @@ namespace solution
        where TEdge : DataEdge
     {
         private TGraph dataGraph;
-        private List<DataVertex> vertices;
 
         public PathFinder(TGraph dataGraph)
         {
@@ -25,8 +25,8 @@ namespace solution
         {
             var vertices = dataGraph.Vertices;
 
-            var root = GetVertexBySymbol(vertices, 'S');
-            var target = GetVertexBySymbol(vertices, 'Q');
+            var root = GetVertexBySymbol(vertices, new Start().Symbol);
+            var target = GetVertexBySymbol(vertices, new Quit().Symbol);
 
 
             Func<TEdge, double> edgeCost = e => 1; // constant cost
@@ -38,8 +38,6 @@ namespace solution
             return tryGetPaths(target, out path);
 
         }
-
-        
 
         private DataVertex GetVertexBySymbol(IEnumerable<DataVertex> vertices, char symbol)
         {

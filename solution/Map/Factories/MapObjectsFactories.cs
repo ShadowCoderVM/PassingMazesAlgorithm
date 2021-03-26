@@ -1,4 +1,5 @@
-﻿using System;
+﻿using solution.Map.Model.MapObjects;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -8,10 +9,10 @@ using System.Text;
 
 namespace solution.Map
 {
-    public class MapObjectsFactories
+    public static class MapObjectsFactories
     {
 
-        public static ReadOnlyCollection<MapObjectFactory> mapObjectFactories = new List<MapObjectFactory>
+        public static ReadOnlyCollection<IMapObjectFactory> mapObjectFactories = new List<IMapObjectFactory>
         {
             new MapObjectFactory<Wall>(),
             new MapObjectFactory<Floor>(),
@@ -21,6 +22,7 @@ namespace solution.Map
 
         public static ReadOnlyCollection<MapObject> MapObjects { get; } = mapObjectFactories.Select(x => x.CreateObject()).ToList().AsReadOnly();
 
+        
         public static ReadOnlyCollection<char> MapObjectsSymbols { get; } = MapObjects.Select(x => x.Symbol).ToList().AsReadOnly();
 
         static public MapObject CreateMapObject(char symbol)
@@ -29,7 +31,7 @@ namespace solution.Map
             {
                 var x = MapObjects[i];
 
-                if (x.EqualsBySybmol(symbol))
+                if (x.Symbol.Equals(symbol))
                     return mapObjectFactories[i].CreateObject();
             }
 

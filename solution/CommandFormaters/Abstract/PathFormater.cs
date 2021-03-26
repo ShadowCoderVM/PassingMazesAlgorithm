@@ -5,13 +5,13 @@ using System.Text;
 
 namespace solution
 {
-    public abstract class PathResultFormater <TEdge> where TEdge : DataEdge
+    public abstract class PathFormater <TEdge> where TEdge : DataEdge
     {
-        protected readonly Action<StringBuilder, TEdge> func;
+        protected readonly CommandFormater<TEdge> commandFormater;
 
-        protected PathResultFormater(Action<StringBuilder, TEdge> func)
+        protected PathFormater( CommandFormater<TEdge> commandFormater)
         {
-            this.func = func;
+            this.commandFormater = commandFormater;
         }
 
         public string Format(IEnumerable<TEdge> path)
@@ -19,7 +19,7 @@ namespace solution
             var sb = new StringBuilder();
 
             foreach (var edge in path)
-                func(sb, edge);
+                commandFormater.Format(sb, edge);
 
             return sb.ToString();
         }

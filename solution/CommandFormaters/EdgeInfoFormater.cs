@@ -5,13 +5,12 @@ using System.Text;
 
 namespace solution
 {
-    public class EdgeInfoFormater<TEdge> : PathResultFormater<TEdge>
+    public class EdgeInfoFormater<TEdge> : CommandFormater<TEdge>
         where TEdge : DataEdge
     {
-
-        public EdgeInfoFormater() : base((sb, edge) => sb.Append($"{edge.Text }"))
+        public override void Format(StringBuilder sb, TEdge edge)
         {
-
+            sb.Append(edge.Text).Append(' ');
         }
     }
 }

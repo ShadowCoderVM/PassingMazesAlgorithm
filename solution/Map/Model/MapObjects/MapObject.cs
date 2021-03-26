@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace solution
+namespace solution.Map.Model.MapObjects
 {
     public abstract class MapObject
     {
@@ -16,20 +16,6 @@ namespace solution
         public string Name { protected set; get; }
         public char Symbol { protected set; get; }
 
-        public override string ToString()
-        {
-            return Name.ToString();
-        }
-
-        public bool EqualsBySybmol(char s)
-        {
-            return Symbol.Equals(s);
-        }
-
-        public bool EqualsBySybmol(MapObject mapObject)
-        {
-            return Symbol.Equals(mapObject.Symbol);
-        }
 
         public override bool Equals(object obj)
         {
@@ -45,7 +31,7 @@ namespace solution
 
         public override int GetHashCode()
         {
-            return Symbol.GetHashCode() + base.GetHashCode();
+            return HashCode.Combine(Name, Symbol);
         }
     }
 

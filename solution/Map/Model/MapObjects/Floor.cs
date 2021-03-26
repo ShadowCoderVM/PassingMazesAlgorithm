@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace solution
+namespace solution.Map.Model.MapObjects
 {
     class Floor : MapObject
     {

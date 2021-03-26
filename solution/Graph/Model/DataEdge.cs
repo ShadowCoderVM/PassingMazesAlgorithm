@@ -1,4 +1,5 @@
 ﻿using GraphX.Common.Models;
+using solution.Converters.NearestIndexes.Model;
 
 namespace solution.Graph.Model
 {
@@ -26,7 +27,7 @@ namespace solution.Graph.Model
         /// Custom string property for example
         /// </summary>
         public string Text { get; set; }
-        public ENeighborSide NeighborSide { get; set; }
+        public ESide NeighborSide { get; set; }
 
         #region GET members
         public override string ToString()

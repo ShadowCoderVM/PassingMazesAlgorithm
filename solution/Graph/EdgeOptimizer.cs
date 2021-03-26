@@ -1,4 +1,5 @@
 ﻿using QuickGraph.Algorithms.Search;
+using solution.Converters.NearestIndexes.Model;
 using solution.Graph.Model;
 using System;
 using System.Collections.Generic;
@@ -7,20 +8,11 @@ using System.Text;
 
 namespace solution
 {
-    class OptimizedEdgeCreator
+    class EdgeOptimizer
     {
-        private List<OptimazedDataEdge> dataEdges = new List<OptimazedDataEdge>();
-
-        private DataVertex FirstKeyVertex { set; get; }
-        private int PassedNonKeyPeaksCounter = 0;
-
-        private IEnumerable<DataVertex> KeyVertices { set; get; }
-
-        private TurnNeighborSide turnNeighbor = new TurnNeighborSide();
-
         public IEnumerable<OptimazedDataEdge> GetOptimazedDataEdges(DataGraph dataGraph, List<DataVertex> keyVertices)
         {
-            KeyVertices = keyVertices;
+            this.keyVertices = keyVertices;
 
             var dfs = new DepthFirstSearchAlgorithm<DataVertex, DataEdge>(dataGraph);
             dfs.DiscoverVertex += Dfs_DiscoverVertex;
@@ -32,9 +24,17 @@ namespace solution
             return dataEdges;
         }
 
+        private readonly List<OptimazedDataEdge> dataEdges = new List<OptimazedDataEdge>();
+        
+        private DataVertex firstKeyVertex;
+        private IEnumerable<DataVertex> keyVertices; 
+        private TurnExpert turnNeighbor = new TurnExpert();
+        private int PassedNonKeyPeaksCounter = 0;
+        
+
         private void Dfs_FinishVertex(DataVertex vertex)
         {
-            FirstKeyVertex = null;
+            firstKeyVertex = null;
 
             //endVertexOrder.Add(@$"{vertex.Name}");
         }
@@ -43,9 +43,9 @@ namespace solution
         {
             var source = e.Source;
             var target = e.Target;
-            if (KeyVertices.Contains(source) & FirstKeyVertex == null)
+            if (keyVertices.Contains(source) & firstKeyVertex == null)
             {
-                FirstKeyVertex = source;
+                firstKeyVertex = source;
                 PassedNonKeyPeaksCounter = 0;
               
             }
@@ -53,15 +53,15 @@ namespace solution
             PassedNonKeyPeaksCounter++;
             
 
-            if (KeyVertices.Contains(target))
+            if (keyVertices.Contains(target))
             {
-                var edge = CreateEdge(FirstKeyVertex, target, e.NeighborSide, PassedNonKeyPeaksCounter);
+                var edge = CreateEdge(firstKeyVertex, target, e.NeighborSide, PassedNonKeyPeaksCounter);
                 dataEdges.Add(edge);
 
-                var revercedEdge = CreateEdge(target, FirstKeyVertex, turnNeighbor.Turn(e.NeighborSide), PassedNonKeyPeaksCounter);
+                var revercedEdge = CreateEdge(target, firstKeyVertex, turnNeighbor.GetOppositeSide(e.NeighborSide), PassedNonKeyPeaksCounter);
                 dataEdges.Add(revercedEdge);
 
-                FirstKeyVertex = null;
+                firstKeyVertex = null;
             }
 
             //edgeTraversalOrder.Add(@$"{e.Text}");
@@ -73,7 +73,7 @@ namespace solution
             (
                 DataVertex source,
                 DataVertex target,
-                ENeighborSide eNeighborSide,
+                ESide eNeighborSide,
                 int passedNonKeyPeaksCounter
             )
         {

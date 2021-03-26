@@ -1,17 +1,21 @@
-﻿using System;
+﻿using solution.Map;
+using solution.Map.Model;
+using solution.Map.Model.MapObjects;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
-namespace solution
+namespace solution.Map.Model
 {
-    public class MyMap
+    public class GameMap
     {
         const int minSize = 1;
 
-        public MapObject[,] Cells { private set; get; }
+        public MapObject[,] Cells { get; }
 
-        public int Height { private set; get; }
-        public int Width { private set; get; }
+        public int Height { get; }
+        public int Width { get; }
 
         public MapObject this[int height, int width]
         {
@@ -25,15 +29,19 @@ namespace solution
             }
         }
 
-        public MyMap(int height, int width)
+        public GameMap(MapData mapData)
         {
-            if (height < minSize || width < minSize)
+            if (mapData.Height < minSize || mapData.Width < minSize)
                 throw new ArgumentException();
 
-            Height = height;
-            Width = width;
+            Height = mapData.Height;
+            Width = mapData.Width;
 
             Cells = new MapObject[Height, Width];
+
+            var mapObjects = mapData.MapBodySymbols.Select(x => x.Select(o => MapObjectsFactories.CreateMapObject(o)));
+            ReadMapObjects(mapObjects);
+
         }
 
         public void ProcessFunctionOverData(Action<int, int> func)
@@ -61,7 +69,7 @@ namespace solution
             return (-1, -1);
         }
 
-        public void InitMap(IEnumerable<IEnumerable<MapObject>> mapObjects)
+        private void ReadMapObjects(IEnumerable<IEnumerable<MapObject>> mapObjects)
         {
             var iterRows = mapObjects.GetEnumerator();
 

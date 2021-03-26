@@ -9,13 +9,13 @@ namespace solution
 {
     class GraphOptimazer
     {
-        public OptimazedDataGraph Optimazi(DataGraph dataGraph)
+        public OptimazedDataGraph Optimaze(DataGraph dataGraph)
         {
             var dataEdges = dataGraph.Edges;
             var keyVertices = GetKeyVertices(dataEdges);
 
-            var optimizedEdgeCreator = new OptimizedEdgeCreator();
-            var optimazedDataEdges = optimizedEdgeCreator.GetOptimazedDataEdges(dataGraph, keyVertices.ToList());
+            var edgeOptimizer = new EdgeOptimizer();
+            var optimazedDataEdges = edgeOptimizer.GetOptimazedDataEdges(dataGraph, keyVertices.ToList());
 
             var optimazedDataGraph = new OptimazedDataGraph();
             optimazedDataGraph.AddVertexRange(keyVertices);
@@ -32,8 +32,8 @@ namespace solution
 
             var crossroads = verticesWithEdges.Where(x => x.Count() > 2);
 
-            var turnChecker = new TurnNeighborSide();
-            var turns = verticesWithEdges.Where(x => x.Count() == 2).Where(x => turnChecker.IsTurn(x));
+            var turnChecker = new TurnExpert();
+            var turns = verticesWithEdges.Where(x => x.Count() == 2 && turnChecker.IsTurn(x));
 
             var vertices = ends
                 .Union(crossroads)
